@@ -9,7 +9,7 @@
 
 import UIKit
 
-class AllListsViewController: UITableViewController, ListDetailViewControllerDelegate, UINavigationControllerDelegate {
+class AllListsViewController: UITableViewController {
 
   var dataModel: DataModel!
 
@@ -120,28 +120,35 @@ class AllListsViewController: UITableViewController, ListDetailViewControllerDel
     }
   }
   
-  func listDetailViewControllerDidCancel(controller: ListDetailViewController) {
-    dismissViewControllerAnimated(true, completion: nil)
-  }
-  
-  func listDetailViewController(controller: ListDetailViewController,
-    didFinishAddingChecklist checklist: Checklist) {
-      dataModel.lists.append(checklist)
-      dataModel.sortChecklists()
-      tableView.reloadData()
-      dismissViewControllerAnimated(true, completion: nil)
-  }
-  
-  func listDetailViewController(controller: ListDetailViewController,
-    didFinishEditingChecklist checklist: Checklist) {
-      dataModel.sortChecklists()
-      tableView.reloadData()
-      dismissViewControllerAnimated(true, completion: nil)
-  }
-  
-  func navigationController(navigationController: UINavigationController, willShowViewController viewController: UIViewController, animated: Bool) {
-    if viewController === self {
-      dataModel.indexOfSelectedChecklist = -1
+}
+
+extension AllListsViewController: ListDetailViewControllerDelegate {
+    func listDetailViewControllerDidCancel(controller: ListDetailViewController) {
+        dismissViewControllerAnimated(true, completion: nil)
     }
-  }
+    
+    func listDetailViewController(controller: ListDetailViewController,
+        didFinishAddingChecklist checklist: Checklist) {
+            dataModel.lists.append(checklist)
+            dataModel.sortChecklists()
+            tableView.reloadData()
+            dismissViewControllerAnimated(true, completion: nil)
+    }
+    
+    func listDetailViewController(controller: ListDetailViewController,
+        didFinishEditingChecklist checklist: Checklist) {
+            dataModel.sortChecklists()
+            tableView.reloadData()
+            dismissViewControllerAnimated(true, completion: nil)
+    }
+}
+
+extension AllListsViewController: UINavigationControllerDelegate {
+    
+    func navigationController(navigationController: UINavigationController, willShowViewController viewController: UIViewController, animated: Bool) {
+        if viewController === self {
+            dataModel.indexOfSelectedChecklist = -1
+        }
+    }
+
 }

@@ -9,7 +9,7 @@
 
 import UIKit
 
-class ChecklistViewController: UITableViewController, ItemDetailViewControllerDelegate {
+class ChecklistViewController: UITableViewController {
   var checklist: Checklist!
   
   override func viewDidLoad() {
@@ -77,31 +77,6 @@ class ChecklistViewController: UITableViewController, ItemDetailViewControllerDe
     label.textColor = view.tintColor    
   }
   
-  func itemDetailViewControllerDidCancel(controller: ItemDetailViewController) {
-    dismissViewControllerAnimated(true, completion: nil)
-  }
-  
-  func itemDetailViewController(controller: ItemDetailViewController, didFinishAddingItem item: ChecklistItem) {
-    let newRowIndex = checklist.items.count
-    
-    checklist.items.append(item)
-    
-    let indexPath = NSIndexPath(forRow: newRowIndex, inSection: 0)
-    let indexPaths = [indexPath]
-    tableView.insertRowsAtIndexPaths(indexPaths, withRowAnimation: .Automatic)
-    
-    dismissViewControllerAnimated(true, completion: nil)
-  }
-  
-  func itemDetailViewController(controller: ItemDetailViewController, didFinishEditingItem item: ChecklistItem) {
-    if let index = checklist.items.indexOf(item) {
-      let indexPath = NSIndexPath(forRow: index, inSection: 0)
-      if let cell = tableView.cellForRowAtIndexPath(indexPath) {
-        configureTextForCell(cell, withChecklistItem: item)
-      }
-    }
-    dismissViewControllerAnimated(true, completion: nil)
-  }
   
   override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
     if segue.identifier == "AddItem" {
@@ -119,4 +94,33 @@ class ChecklistViewController: UITableViewController, ItemDetailViewControllerDe
       }
     }
   }
+}
+
+extension ChecklistViewController: ItemDetailViewControllerDelegate {
+    func itemDetailViewControllerDidCancel(controller: ItemDetailViewController) {
+        dismissViewControllerAnimated(true, completion: nil)
+    }
+    
+    func itemDetailViewController(controller: ItemDetailViewController, didFinishAddingItem item: ChecklistItem) {
+        let newRowIndex = checklist.items.count
+        
+        checklist.items.append(item)
+        
+        let indexPath = NSIndexPath(forRow: newRowIndex, inSection: 0)
+        let indexPaths = [indexPath]
+        tableView.insertRowsAtIndexPaths(indexPaths, withRowAnimation: .Automatic)
+        
+        dismissViewControllerAnimated(true, completion: nil)
+    }
+    
+    func itemDetailViewController(controller: ItemDetailViewController, didFinishEditingItem item: ChecklistItem) {
+        if let index = checklist.items.indexOf(item) {
+            let indexPath = NSIndexPath(forRow: index, inSection: 0)
+            if let cell = tableView.cellForRowAtIndexPath(indexPath) {
+                configureTextForCell(cell, withChecklistItem: item)
+            }
+        }
+        dismissViewControllerAnimated(true, completion: nil)
+    }
+    
 }

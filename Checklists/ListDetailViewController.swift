@@ -14,7 +14,7 @@ protocol ListDetailViewControllerDelegate: class {
   func listDetailViewController(controller: ListDetailViewController, didFinishEditingChecklist checklist: Checklist)
 }
 
-class ListDetailViewController: UITableViewController, UITextFieldDelegate, IconPickerViewControllerDelegate {
+class ListDetailViewController: UITableViewController {
   @IBOutlet weak var textField: UITextField!
   @IBOutlet weak var doneBarButton: UIBarButtonItem!  
   @IBOutlet weak var iconImageView: UIImageView!
@@ -65,13 +65,6 @@ class ListDetailViewController: UITableViewController, UITextFieldDelegate, Icon
     }
   }
   
-  func textField(textField: UITextField, shouldChangeCharactersInRange range: NSRange, replacementString string: String) -> Bool {
-    let oldText: NSString = textField.text!
-    let newText: NSString = oldText.stringByReplacingCharactersInRange(range, withString: string)
-    doneBarButton.enabled = (newText.length > 0)
-    return true
-  }
-  
   override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
     if segue.identifier == "PickIcon" {
       let controller = segue.destinationViewController as! IconPickerViewController
@@ -79,9 +72,22 @@ class ListDetailViewController: UITableViewController, UITextFieldDelegate, Icon
     }
   }
   
-  func iconPicker(picker: IconPickerViewController, didPickIcon iconName: String) {
-    self.iconName = iconName
-    iconImageView.image = UIImage(named: iconName)
-    navigationController?.popViewControllerAnimated(true)
-  }
+
+}
+
+extension ListDetailViewController: IconPickerViewControllerDelegate {
+    func iconPicker(picker: IconPickerViewController, didPickIcon iconName: String) {
+        self.iconName = iconName
+        iconImageView.image = UIImage(named: iconName)
+        navigationController?.popViewControllerAnimated(true)
+    }
+}
+
+extension ListDetailViewController: UITextFieldDelegate {
+    func textField(textField: UITextField, shouldChangeCharactersInRange range: NSRange, replacementString string: String) -> Bool {
+        let oldText: NSString = textField.text!
+        let newText: NSString = oldText.stringByReplacingCharactersInRange(range, withString: string)
+        doneBarButton.enabled = (newText.length > 0)
+        return true
+    }
 }

@@ -15,7 +15,7 @@ protocol ItemDetailViewControllerDelegate: class {
   func itemDetailViewController(controller: ItemDetailViewController, didFinishEditingItem item: ChecklistItem)
 }
 
-class ItemDetailViewController: UITableViewController, UITextFieldDelegate {
+class ItemDetailViewController: UITableViewController {
 
   @IBOutlet weak var textField: UITextField!
   @IBOutlet weak var doneBarButton: UIBarButtonItem!
@@ -124,17 +124,6 @@ class ItemDetailViewController: UITableViewController, UITextFieldDelegate {
     return super.tableView(tableView, indentationLevelForRowAtIndexPath: indexPath)
   }
   
-  func textField(textField: UITextField, shouldChangeCharactersInRange range: NSRange, replacementString string: String) -> Bool {
-    let oldText: NSString = textField.text!
-    let newText: NSString = oldText.stringByReplacingCharactersInRange(range, withString: string)
-
-    doneBarButton.enabled = (newText.length > 0)
-    return true
-  }
-  
-  func textFieldDidBeginEditing(textField: UITextField) {
-    hideDatePicker()
-  }
 
   func updateDueDateLabel() {
     let formatter = NSDateFormatter()
@@ -192,4 +181,19 @@ class ItemDetailViewController: UITableViewController, UITextFieldDelegate {
       UIApplication.sharedApplication().registerUserNotificationSettings(notificationSettings)
     }
   }
+}
+
+extension ItemDetailViewController: UITextFieldDelegate {
+    
+    func textField(textField: UITextField, shouldChangeCharactersInRange range: NSRange, replacementString string: String) -> Bool {
+        let oldText: NSString = textField.text!
+        let newText: NSString = oldText.stringByReplacingCharactersInRange(range, withString: string)
+        
+        doneBarButton.enabled = (newText.length > 0)
+        return true
+    }
+    
+    func textFieldDidBeginEditing(textField: UITextField) {
+        hideDatePicker()
+    }
 }
